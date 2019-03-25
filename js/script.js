@@ -18,3 +18,4 @@ let start = document.getElementById('start'),
     month = document.querySelector('.month-value'),
     day = document.querySelector('.day-value');
 
+console.log(month);
