@@ -20,11 +20,20 @@ let startBtn = document.getElementById('start'),
     percentValue = document.querySelector('.choose-percent'),
     yearValue = document.querySelector('.year-value'),
     monthValue = document.querySelector('.month-value'),
-    dayValue = document.querySelector('.day-value');
+    dayValue = document.querySelector('.day-value'),
+    sum = 0;
+    
 
 let money, time;
 
+expensesBtn.setAttribute('disabled','disabled');
+optionalExpensesBtn.setAttribute('disabled','disabled');
+countBtn.setAttribute('disabled','disabled');
+
 startBtn.addEventListener('click', function() { // пишем функцию для кнопки "Начать расчет"
+    expensesBtn.removeAttribute('disabled');
+    optionalExpensesBtn.removeAttribute('disabled');
+    countBtn.removeAttribute('disabled');
     money = +prompt("Ваш бюджет на месяц?"); // плюс для того чтобы мы получали данныые в виде чисел
     time = prompt("Введите дату в формате YYYY-MM-DD"); // 2 вопросы ответы которых мы записываем в переменные
 
@@ -45,17 +54,19 @@ startBtn.addEventListener('click', function() { // пишем функцию д�
 // в JS все начинаеться с нуля, для коректного отображения месяца - прибавляем единицу
     dayValue.value = new Date(Date.parse(time)).getDate();
 
-})
+});
+
+
 
 expensesBtn.addEventListener('click', function() { // пишем функцию для кнонки "Введите обязательные расходы"
-    let sum = 0;
+    sum = 0;
     for (let i = 0; i < expensesItem.length; i++) { // запускаем цикл действий, чтобы не писать несколько раз prompt с вопросом
         // задаем переменную i = 0 которая будет вызывать действия пока не достигнет количество инпутов (expensesItem.length)
         let a = expensesItem[i].value, // сюда пойдут наименование нашего расхода
             b = expensesItem[++i].value; // сюда пойдут цены 
     // теперь пишем проверки чтобы пользователь писал только то что нужно
-        if (typeof(a) === "string" && typeof(a) != null &&
-            typeof(b) != null && a != ''&& b != '' && a.length < 50 && b.length < 50) { 
+        if (typeof(a) === "string" && a &&
+            b && a != '' && b != '' && a.length < 50 && b.length < 50) { 
             // проверяем что входящие данные будут строкой
             // проверяем чтобы "a" и "b" не равнялись null, то есть ничему
             // проверяем чтобы lenght(количестов символов) было не больше 50
@@ -93,7 +104,7 @@ optionalExpensesBtn.addEventListener('click', function() { // пишем фун�
 countBtn.addEventListener('click', function() { // пишем функцию для кнонки "Расчитать" дневного бюджета
     
     if (appData.budget != undefined) { // пишем условия при котором, расчет будет запускаться только когда есть данные о бюджете
-        appData.moneyPerDay = (appData.budget / 30).toFixed(); // создаем новое свойство в объект appData, которое будет содержать бюджет на один день
+        appData.moneyPerDay = (+(appData.budget - sum) / 30).toFixed(); // создаем новое свойство в объект appData, которое будет содержать бюджет на один день
         dayBudgetValue.textContent = appData.moneyPerDay; // полученный дневной бюджет помещаем в пустой блок
         
         if(appData.moneyPerDay < 100) { // если бюджет на один день меньше 100
@@ -176,4 +187,4 @@ let appData = { // главный объект, который содержит 
 for (let key in appData) {  // делаем цикл в котором key это каждое свойство в appData
     console.log("Наша программа включает в себя данные: " + key) // выводим на экран все свойства
 }
-    
+
